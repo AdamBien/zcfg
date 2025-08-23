@@ -37,17 +37,18 @@ class ZCfgTest {
         System.setProperty("user.home", tempDir.toString());
         
         try {
-            var properties = ZCfg.load("testapp");
+            ZCfg.load("testapp");
             
             // Local overwrites global
-            assertThat(properties.getProperty("server.port")).isEqualTo("9090");
-            assertThat(properties.getProperty("app.name")).isEqualTo("local");
+            assertThat(ZCfg.string("server.port")).isEqualTo("9090");
+            assertThat(ZCfg.string("app.name")).isEqualTo("local");
             
             // Global-only property remains
-            assertThat(properties.getProperty("db.url")).isEqualTo("localhost:5432");
+            assertThat(ZCfg.string("db.url")).isEqualTo("localhost:5432");
         } finally {
             System.setProperty("user.home", originalHome);
             Files.deleteIfExists(Path.of("app.properties"));
+            ZCfg.CACHE = null; // Reset cache
         }
     }
     
@@ -62,11 +63,12 @@ class ZCfgTest {
         System.setProperty("test.property", "fromSystem");
         
         try {
-            var properties = ZCfg.load("testapp");
-            assertThat(properties.getProperty("test.property")).isEqualTo("fromSystem");
+            ZCfg.load("testapp");
+            assertThat(ZCfg.string("test.property")).isEqualTo("fromSystem");
         } finally {
             System.clearProperty("test.property");
             Files.deleteIfExists(Path.of("app.properties"));
+            ZCfg.CACHE = null; // Reset cache
         }
     }
     
@@ -77,6 +79,7 @@ class ZCfgTest {
         System.setProperty("test.name", "test");
         
         try {
+            ZCfg.load("testapp");
             assertThat(ZCfg.string("test.name")).isEqualTo("test");
             assertThat(ZCfg.string("missing", "default")).isEqualTo("default");
             assertThat(ZCfg.integer("test.port", 0)).isEqualTo(8080);
@@ -87,6 +90,7 @@ class ZCfgTest {
             System.clearProperty("test.port");
             System.clearProperty("test.enabled");
             System.clearProperty("test.name");
+            ZCfg.CACHE = null; // Reset cache
         }
     }
 }

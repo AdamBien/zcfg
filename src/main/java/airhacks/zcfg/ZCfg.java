@@ -12,15 +12,15 @@ import java.util.Properties;
  * 2. ./app.properties (local, overwrites global)
  * 3. System properties (highest priority)
  */
-public interface ZCfg {
+public class ZCfg {
     
-    Properties INSTANCE = load(appName());
+    static Properties CACHE;
     
-    static String appName() {
-        return System.getProperty("app.name", "app");
+    public static void load(String appName) {
+        CACHE = loadProperties(appName);
     }
     
-    static Properties load(String appName) {
+    static Properties loadProperties(String appName) {
         var properties = new Properties();
         
         // Load global properties from ~/.[appName]/app.properties
@@ -50,21 +50,25 @@ public interface ZCfg {
         }
     }
     
-    static String string(String key) {
-        return INSTANCE.getProperty(key);
+    public static String string(String key) {
+        if (CACHE == null) throw new IllegalStateException("Call ZCfg.load(appName) first");
+        return CACHE.getProperty(key);
     }
     
-    static String string(String key, String defaultValue) {
-        return INSTANCE.getProperty(key, defaultValue);
+    public static String string(String key, String defaultValue) {
+        if (CACHE == null) throw new IllegalStateException("Call ZCfg.load(appName) first");
+        return CACHE.getProperty(key, defaultValue);
     }
     
-    static int integer(String key, int defaultValue) {
-        var value = INSTANCE.getProperty(key);
+    public static int integer(String key, int defaultValue) {
+        if (CACHE == null) throw new IllegalStateException("Call ZCfg.load(appName) first");
+        var value = CACHE.getProperty(key);
         return value != null ? Integer.parseInt(value) : defaultValue;
     }
     
-    static boolean bool(String key, boolean defaultValue) {
-        var value = INSTANCE.getProperty(key);
+    public static boolean bool(String key, boolean defaultValue) {
+        if (CACHE == null) throw new IllegalStateException("Call ZCfg.load(appName) first");
+        var value = CACHE.getProperty(key);
         return value != null ? Boolean.parseBoolean(value) : defaultValue;
     }
 }
