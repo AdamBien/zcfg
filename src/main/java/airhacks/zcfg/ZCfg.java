@@ -23,6 +23,7 @@ import java.util.Properties;
  */
 public class ZCfg {
     
+    static final String PROPERTIES_FILE = "app.properties";
     static Properties CACHE;
     
     public static void load(String appName) {
@@ -34,13 +35,13 @@ public class ZCfg {
         
         // Load global properties from ~/.[appName]/app.properties
         var userHome = System.getProperty("user.home");
-        var globalConfig = Path.of(userHome, "." + appName, "app.properties");
+        var globalConfig = Path.of(userHome, "." + appName, PROPERTIES_FILE);
         if (Files.exists(globalConfig)) {
             loadFromFile(globalConfig, properties);
         }
         
         // Load local properties from ./app.properties (overwrites global)
-        var localConfig = Path.of("app.properties");
+        var localConfig = Path.of(PROPERTIES_FILE);
         if (Files.exists(localConfig)) {
             loadFromFile(localConfig, properties);
         }
