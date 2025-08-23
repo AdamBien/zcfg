@@ -1,7 +1,6 @@
 package airhacks.zcfg;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
@@ -11,6 +10,16 @@ import java.util.Properties;
  * 1. ~/.[appName]/app.properties (global)
  * 2. ./app.properties (local, overwrites global)
  * 3. System properties (highest priority)
+ * 
+ * <pre>
+ * // Initialize once at application startup
+ * ZCfg.load("myapp");
+ * 
+ * // Access configuration values
+ * var port = ZCfg.integer("server.port", 8080);
+ * var debug = ZCfg.bool("debug.enabled", false);
+ * var dbUrl = ZCfg.string("db.url", "localhost:5432");
+ * </pre>
  */
 public class ZCfg {
     
