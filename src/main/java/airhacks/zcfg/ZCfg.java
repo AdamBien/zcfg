@@ -43,10 +43,10 @@ public class ZCfg {
     }
     
     static void loadFromFile(Path file, Properties properties) {
-        try (InputStream is = Files.newInputStream(file)) {
+        try (var is = Files.newInputStream(file)) {
             properties.load(is);
         } catch (IOException e) {
-            throw new RuntimeException("Cannot load properties from: " + file, e);
+            throw new IllegalStateException("Cannot load properties from: " + file, e);
         }
     }
     
