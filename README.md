@@ -3,6 +3,8 @@ Zero Dependency Configuration Utility
 
 A one-class configuration loader for Java applications that reads standard Java properties files from global user directory, local project directory, and system properties with defined precedence rules. No external dependencies required.
 
+![Duke Configurator](logo.png)
+
 ## Usage
 
 ```java
