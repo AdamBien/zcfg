@@ -53,7 +53,7 @@ public class ZCfg {
     }
     
     static void loadFromFile(Path file, Properties properties) {
-        try (var is = Files.newInputStream(file)) {
+        try (var is = Files.newBufferedReader(file)) {
             properties.load(is);
         } catch (IOException e) {
             throw new IllegalStateException("Cannot load properties from: " + file, e);
